@@ -12,7 +12,7 @@ WORKDIR /app
 COPY . /app/
 
 # 声明运行时容器提供服务端口
-EXPOSE 80
+EXPOSE 88
 
 # 1.安装依赖
 # 2.运行 npm run buil
