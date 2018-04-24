@@ -10,4 +10,4 @@ RUN npm config set registry https://registry.npm.taobao.org
 RUN npm install
 COPY . /var/www/html
 
-RUN npm run build
+RUN npm run dev
