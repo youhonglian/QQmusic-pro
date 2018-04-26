@@ -1,8 +1,6 @@
 <template>
   <div class="player-cont">
     <div class="player-mask"></div>
-    <!--<div class="player-bg"-->
-    <!--style="background: url(song[0].al.picUrl);"></div>-->
     <div class="mod-player" v-if="!isshowLyric">
       <div class="imgUrl" @click="showLyric()">
         <img :src="song[0].al.picUrl" alt="">
@@ -14,34 +12,31 @@
         <a href="javascript:;" class="btn_big_next" @click="next()"></a>
         <div class="player_music">
           <div class="music_info">
-            <a href="" class="song_info">{{song[0].name}}</a>
+            <a href="javascript:;" class="song_info">{{song[0].name}}</a>
             -
-            <a href="" class="singer">{{song[0].ar[0].name}}</a>
+            <a href="javascript:;" class="singer">{{song[0].ar[0].name}}</a>
           </div>
           <div class="play_music_time">
-            <p class="startT">00:00</p>
+            <p class="startT">{{transformTime(formatNow)}}</p>
             -
             <p class="endT">{{(transformTime(duration/1000))}}</p>
           </div>
-          <div class="player_progress">
-            <div class="player_progress__inner">
-              <div class="player_progress__load"></div>
-              <div class="player_progress__play">
+          <div class="player_progress" @click="changeTime($event)">
+            <div class="player_progress__inner" >
+              <div class="player_progress__load" id="load"></div>
+              <div class="player_progress__play" id="play" :style="{width: (now/reDuration).toFixed(3)*1000 + '%'}">
                 <i class="player_progress__dot"></i>
               </div>
             </div>
           </div>
-          <el-progress :percentage="50"></el-progress>
         </div>
         <div class="player_progress player_voice">
-          <a href="javascript:;" class="btn_big_voice"  @click="voice()">
-            <i class="icon_txt"></i>
+          <a href="javascript:;" class="btn_big_voice"  @click="voice()" v-if="sound"></a>
+          <a href="javascript:;" class="btn_no_voice"  @click="voice()" v-if="!sound"></a>
+          <a href="" class="btn_big_down" :download="this.$store.state.src"></a>
+          <a href="javascript:;" class="btn_big_share tooltip"  @click="share()" @onmouseover="share()">
+              <div id="share-2" class="tooltiptext" ></div>
           </a>
-          <div class="player_progress__inner">
-            <div class="player_progress__play">
-              <i class="player_progress__dot"></i>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -62,7 +57,10 @@ export default {
       sid: '',
       singPic: '',
       duration: '',
-      isshowLyric: false
+      isshowLyric: false,
+      move: '',
+      sound: true,
+      now: 0,
     }
   },
   computed: {
@@ -77,24 +75,38 @@ export default {
     },
     lyric() {
       return this.$store.state.lyric
+    },
+    reDuration() {
+      return this.duration/100
+    },
+    formatNow() {
+      return parseInt(this.now)
     }
   },
   mounted() {
+    let audio = document.querySelector('audio')
+    this.now = audio.currentTime
+    audio.addEventListener('play', () => {
+      this.now = audio.currentTime;
+      setInterval(() => {
+        this.now = audio.currentTime;
+      }, 1000);
+      this.now = audio.currentTime
+    })
+    this.$store.commit('save_isPlaying', false)
     this.id = this.$route.params.id
     let that = this
     this.duration = this.songList[this.id].duration
-    this.axios.get(`http://music-u.leanapp.cn/music/url?id=${this.songList[this.id].id}`)
+    this.axios.get(`http://127.0.0.1:3000/music/url?id=${this.songList[this.id].id}`)
       .then(res => {
         that.sid = res.data.data[0].id
-        console.log('that.sid' + that.sid)
         this.$store.commit('save_src', res.data.data[0].url)
-        this.axios.get(`http://music-u.leanapp.cn/song/detail?ids=${that.sid}`)
+        this.axios.get(`http://127.0.0.1:3000/song/detail?ids=${that.sid}`)
           .then(res => {
             this.$store.commit('save_song', res.data.songs)
           })
-        this.axios.get(`https://api.imjad.cn/cloudmusic/?type=lyric&id=${that.sid}`)
+        this.axios.get(`http://localhost:3000/lyric?id=${that.sid}`)
           .then(res => {
-            console.log(res.data.lrc.lyric)
             let str = res.data.lrc.lyric
             var arr1 = []
             var arr2 = []
@@ -103,7 +115,6 @@ export default {
                 arr1.push(i)
               }
               var t = str.substring(arr1[0], arr1[1])
-              console.log(t)
               t = t.substring(0, 10) + '                  ' + t.substring(10)
               for (var j = 1; j < arr1.length; j++) {
                 var lyricSub = str.substring(arr1[j], arr1[j + 1])
@@ -124,26 +135,43 @@ export default {
       s = s.toString().length == 1 ? ('0' + s) : s;
       return m + ':' + s;
     },
-    isPlay() {
-      console.log(this.$store.state.isPlaying)
+    isPlay() {     
       if (this.$store.state.isPlaying) {
-        audio.pause()
-        this.$store.state.isPlaying = !this.$store.state.isPlaying
+            audio.pause()
+            this.$store.commit('save_isPlaying', false)
       } else {
-        audio.play()
-        this.$store.state.isPlaying = !this.$store.state.isPlaying
+            audio.play()
+            this.$store.commit('save_isPlaying', true)
       }
     },
     next() {
-
+      this.songList.shift()
     },
     showLyric() {
       this.isshowLyric = !this.isshowLyric
     },
     voice() {
-      // this.$refs.audio.volume = 0
-      console.log(this.$refs.audio)
-      // console.log('dfsdf')
+      let audio = document.querySelector('audio')   
+      if(this.sound) {
+          audio.muted = true
+          this.sound = !this.sound
+      } else {
+          audio.muted = false
+          this.sound = !this.sound
+      }
+    },
+    share() {
+      $('#share-2').share({sites: ['qzone', 'wechat', 'facebook','twitter']});
+    },
+    changeTime(event) {
+      let audio = document.querySelector('audio')
+      let progress = document.querySelector('.player_progress')
+      let start = progress.getBoundingClientRect().left;
+      let end = event.pageX;
+      audio.currentTime = (end - start) / progress.offsetWidth * (this.duration/1000);
+      this.now = audio.currentTime;
+      audio.play();
+      this.$store.commit('save_isPlaying', true);
     }
   }
 }
@@ -245,9 +273,16 @@ a {
 .btn_big_style_random,
 .btn_big_style_single,
 .btn_big_voice,
+.btn_no_voice,
 .btn_lang,
 .player_progress__dot {
   background: url(https://y.gtimg.cn/mediastyle/yqq/img/player.png?max_age=2592000&v=749f8d7b865b29877500567512879e12);
+  background-repeat: no-repeat;
+  position: absolute;
+  opacity: .8;
+}
+.btn_big_share {
+  background: url('../assets/img/share.png') center center;
   background-repeat: no-repeat;
   position: absolute;
   opacity: .8;
@@ -292,7 +327,8 @@ a {
   }
 }
 
-.btn_big_pause {
+.btn_big_down
+ {
   top: 0;
   left: 76px;
   width: 21px;
@@ -310,6 +346,7 @@ a {
   height: 20px;
   background-position: 0 -52px;
 }
+
 
 .player_music {
   position: relative;
@@ -336,6 +373,7 @@ a {
     padding-top: 6px;
     height: 8px;
     cursor: pointer;
+    width: 100%;
     .player_progress__inner {
       position: relative;
       height: 2px;
@@ -344,6 +382,7 @@ a {
     .player_progress__load {
       height: 2px;
       background: rgba(255, 255, 255, 0.2);
+      width: 0%;
     }
     .player_progress__play {
       position: absolute;
@@ -351,6 +390,7 @@ a {
       left: 0;
       height: 2px;
       background: rgba(255, 255, 255, 0.7);
+      width: 0%;
     }
     .player_progress__dot {
       top: -4px;
@@ -377,6 +417,61 @@ a {
     height: 21px;
     background-position: 0 -144px;
   }
+  .btn_no_voice {
+    top: 4px;
+    left: -300px;
+    width: 26px;
+    height: 21px;
+    background-position: 0 -180px;
+  }
+   .btn_big_down {
+    top: 4px;
+    left: -255px;
+    width: 26px;
+    height: 21px;
+    background-position: 0 -120px;
+  }
+   .btn_big_share {
+    top: 5px;
+    left: -210px;
+    width: 26px;
+    height: 22px;
+  }
+  .tooltip {
+    /*position: relative;*/
+    display: inline-block;
+    /*border-bottom: 1px dotted black;*/
+  }
+
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 190px;
+    /*height: -26px;*/
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    height: 43px;
+    /* padding: 0px 0; */
+    top: -50px;
+    position: absolute;
+    left: -70px;
+    z-index: 1;
+  }
+
+  .tooltip:hover .tooltiptext {
+      visibility: visible;
+  }
+  .tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -14px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
 }
 
 .player_progress {

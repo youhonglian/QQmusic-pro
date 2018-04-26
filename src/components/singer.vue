@@ -16,8 +16,8 @@
       </ul>
     </div>
     <ul>
-      <li v-for="item in this.singer" class="hot">
-        <div class="hot-singer">
+      <li v-for="item in this.singer" class="hot" > 
+        <div class="hot-singer" @click="searchSinger(item.name)">
           <img :src="item.picUrl" alt="">
           <p>{{item.name}}</p>
         </div>
@@ -30,19 +30,30 @@
   export default {
     data() {
       return{
-        singer: ''
+      }
+    },
+    computed: {
+      singer() {
+        return this.$store.state.singer
       }
     },
     created() {
-      this.$store.commit('changeTagIndex', 2)
-
-      this.axios.get(`http://music-u.leanapp.cn/top/artists`)
+       this.$store.commit('changeTagIndex', 2)
+       this.axios.get(`http://localhost:3000/top/artists`)
         .then(res => {
           res.data.artists.map(item => {
             this.$store.commit('save_singer', res.data.artists)
           })
-        })
-      this.singer = this.$store.state.singer
+        })     
+    },
+    methods: {
+      searchSinger(name) {
+         this.axios.get(`http://localhost:3000/search?keywords=${name}`)
+            .then(res => {
+              this.$store.commit('save_songList', res.data.result.songs)
+              this.$router.push({path: '/artList', query: {keyword: this.keyword}})
+            })
+      }
     }
   }
 </script>

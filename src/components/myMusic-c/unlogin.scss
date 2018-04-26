@@ -6,7 +6,27 @@
     overflow: hidden;
   }
 }
-
+.dialog-login {
+  z-index: 999;
+}
+.el-dialog {
+  opacity: 0.99 !important;
+  border-radius: 6px !important;
+}
+.el-dialog--small {
+    width: 32% !important;
+}
+.el-form-item {
+    margin-bottom: 44px !important;
+    width: 90% !important;
+    margin-top: 10px !important;
+}
+.el-form-item.el-form-item-buttom {
+    margin-left: -33px;
+}
+.el-dialog__header {
+    padding: 40px 32px 0 33px !important;
+}
 .play .profile_unlogin__btn, .play .profile_unlogin__desc,
 .play .profile_unlogin__tit {
   opacity: 1;

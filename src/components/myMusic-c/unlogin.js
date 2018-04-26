@@ -1,23 +1,3 @@
-<!--<template>
-  <div class="dialog-login">    
-      <el-dialog title="立即登录" :visible.sync="dialogFormVisible">
-         <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="用户名" prop="username" >
-                <el-input v-model.number="ruleForm2.username" placeholder="请输入账号"></el-input>
-            </el-form-item>
-            <el-form-item label="密码" prop="password">
-                <el-input type="password" v-model="ruleForm2.password" auto-complete="off"  placeholder="请输入密码" @keyup.enter.native="submitForm('ruleForm2')"></el-input>
-            </el-form-item>                           
-            <el-form-item class="el-form-item-buttom">
-                <el-button type="primary" @click="submitForm('ruleForm2')" style="backgroundColor:#31c27c">登录</el-button>
-                <el-button @click="resetForm('ruleForm2')">重置</el-button>
-            </el-form-item>
-        </el-form>
-      </el-dialog>
-  </div>
-</template>
-
-<script>
 export default {
     data() {
       var checkName = (rule, value, callback) => {
@@ -35,7 +15,7 @@ export default {
        
       };
       return {
-        dialogFormVisible: this.$store.state.dialogFormVisible,
+        dialogFormVisible: false,
         ruleForm2: {
           username: '',
           password: ''
@@ -70,7 +50,6 @@ export default {
               if(response.data.code == 200 && response.data.loginType == 1) {
                 sessionStorage.username = this.ruleForm2.username
                 alert("登录成功")
-                this.$store.state.isLogin = true
                 } else {
                   that.open()
                 }
@@ -88,8 +67,3 @@ export default {
     }
     
 }
-</script>
-
-<style lang="scss" scoped>
-@import "./unlogin.scss";
-</style>-->

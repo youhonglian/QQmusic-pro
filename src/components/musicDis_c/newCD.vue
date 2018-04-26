@@ -5,7 +5,7 @@
     <div class="section_inner" >
       <div class="index__hd">
         <h2 class="index__tit">
-          <i class="index__tit_sprite"></i>
+          <i class="index__tit_sprite" style="background-position:0 -136px"></i>
           <i class="icon_txt">新碟首发</i>
         </h2>
         <i class="index__line index__line--left"></i>
@@ -20,7 +20,7 @@
         <a href="" class="index_tab__item js_tab" v-for="item in navList">{{item}}</a>
       </div>
       <el-carousel :interval="5000" arrow="always" indicator-position="outside" height="450px" >
-        <el-carousel-item v-for="item in 4" :key="item"">
+        <el-carousel-item v-for="item in 4" :key="item">
           <div class="mod_playlist mod_slide">
             <ul class="playlist__list slide__list" id="albumlist" style="left:-1200px;">
               <li class="playlist__item slide__item" v-for="item in playList">
@@ -83,6 +83,9 @@
         ]
       }
     },
+    mounted() {
+
+    },
     methods: {
       arrow: function () {
         const sab = document.querySelectorAll('.slide_action__btn')
@@ -93,7 +96,6 @@
       arrowL: function () {
         const sab = document.querySelectorAll('.slide_action__btn')
         sab[0].style.transform = 'translatex(-100%)'
-        sab[1].style.transform = 'translatex(100%)'
       }
     }
   }

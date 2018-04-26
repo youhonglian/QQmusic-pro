@@ -3,6 +3,7 @@
     <v-head></v-head>
     <router-view></router-view>
     <v-foot></v-foot>
+    <v-mask></v-mask>
     <audio :src="src"  id="audio" :autoplay="isPlaying" loop ref="audio"></audio>
   </div>
 </template>
@@ -10,14 +11,14 @@
 <script>
 import vHead from './components/public/header'
 import vFoot from './components/public/footer'
+import vMask from './components/public/mask'
 
 export default {
   name: 'app',
   components: {
-    // 'v-head': vhead,
-    // 'v-foot': vfoot
     vHead,
-    vFoot
+    vFoot,
+    vMask
   },
   mounted () {
     console.log(this.$router)
@@ -50,7 +51,6 @@ export default {
   }
   body, button, input, select, textarea, th, a{
     color: #000;
-    /*background-color: #fff;*/
     font-size: 14px;
     line-height: 1.5;
     font-family: poppin, 'PingFang SC',Tahoma,Arial,sans-serif;

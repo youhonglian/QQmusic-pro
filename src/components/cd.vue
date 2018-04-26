@@ -17,7 +17,7 @@
     methods: {
       test: function() {
         this.axios({method: 'get',
-        baseURL: '/api',
+        baseURL: '/',
         url:'?format=json&calback=&from=webapp_music&method=baidu.ting.billboard.billList&type=1&size=10&offset=0',
       }).then((res) => {
         console.log(res)

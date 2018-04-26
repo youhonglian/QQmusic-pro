@@ -1,9 +1,9 @@
 <template>
-  <div class="mod_index mod_index--event mod_slide_box" id="focus">
+  <div class="mod_index mod_index--event mod_slide_box" id="focus"  style="background: #000 url(https://y.gtimg.cn/mediastyle/yqq/img/bg_index_new.jpg) 50% 0 repeat-x;">
     <div class="section_inner">
       <div class="index__hd">
         <h2 class="index__tit">
-          <i class="index__tit_sprite"></i>
+          <i class="index__tit_sprite" style="background-position: 0 -90px;"></i>
           <i class="icon_txt">精彩推荐</i>
         </h2>
         <i class="index__line index__line--left"></i>
@@ -31,7 +31,7 @@
       }
     },
     mounted () {
-      this.axios.get(`http://localhost:3000/banner`)
+      this.axios.get(`http://music-u.leanapp.cn/banner`)
        .then(res => {
           res.data.banners.forEach(item => {
            this.banner.push(item)

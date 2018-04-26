@@ -19,9 +19,24 @@ export default{
     state.src = src
   },
   save_isPlaying(state, isPlaying) {
-    state.isPlating = isPlaying
+    state.isPlaying = isPlaying
   },
   save_lyric(state, lyric) {
     state.lyric = lyric
-  }
+  },
+  save_nickname(state, nickname) {
+    state.user.nickname = nickname
+  },
+  save_avatarUrl(state, avatarUrl) {
+    state.user.avatarUrl = avatarUrl
+  },
+  save_userId(state, userId) {
+    state.user.userId = userId
+  },
+  changeMask(state, bool) {
+    state.mask = bool
+  },
+  // changeVoice(state, bool) {
+  //   state.vioce = bool
+  // }
 }

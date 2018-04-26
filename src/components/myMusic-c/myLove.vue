@@ -2,10 +2,10 @@
   <div class="main-bg">
     <div class="main">
       <div class="mod_data">
-        <img :src="songList[0].album.artist.img1v1Url" :alt="songList[0].album.name" class="avatar">
+        <img :src="this.$store.state.user.avatarUrl" class="avatar">
         <div class="data__cont">
           <div class="data__name">
-            <h1>{{songList[0].artists[0].name}}</h1>
+            <h1>我喜欢听的歌</h1>
             <p>歌手描述：暂无</p>
             <p>歌曲年份：暂无</p>
             <p>描述：暂无</p>
@@ -14,7 +14,7 @@
       </div>
       <div class="mod_part">
         <div class="part_hd">
-          <h2>热门歌曲</h2>
+          <h2>我喜欢听的歌</h2>
         </div>
         <div class="mod_songlist">
           <ul class="songlist__header">
@@ -23,14 +23,12 @@
             <li class="songlist__header_time">时长</li>
           </ul>
           <ul class="songlist__list">
-            <li v-for="(item, index) in songList">
+            <li v-for="(item, index) in loveList">
               <p class="songNum">{{index+1}}</p>
               <div class="songName">
                 <p>{{item.name}}</p>
                 <div class="mod_list_menu noShow" @mouseover="iconShow" >
                   <!--<router-link  :to="{ name: 'player', params:{ id: index }}">-->
-                    <i href="javascript:;" class="song_love love" @click="loveSong(index)"></i>
-                    <!--<i class="song_love-select" v-if=""></i>                    -->
                     <i class="song_play" @click="playSong(index)"></i>
                   <!--</router-link>-->
                 </div>
@@ -56,20 +54,28 @@ import {mapState} from 'vuex'
       }
     },
      computed: {
-      songList() {
-        return this.$store.state.songList
+      loveList() {
+        return this.$store.state.loveList
+      },
+      nickname () {
+        return this.$store.state.user.nickname
+      },
+      avatarUrl () {
+        return this.$store.state.user.avatarUrl
       }
     },
+    created() {
+       console.log(this.$store.state.loveList) 
+    },
     mounted () {
-      this.totalTime = this.transformTime(this.songList.duration)
+      this.totalTime = this.transformTime(this.loveList.duration)
     },
     methods: {
       iconShow: function () {
         let playlist = document.querySelectorAll('.mod_list_menu')
       },
       playSong: function(index) {
-        console.log(this.songList[1])
-        this.$store.state.recordList.push(this.$store.state.songList[index])              
+        console.log(this.loveList[1])
         this.$router.push(
           {name: "player", params: {'id': index}}
         )
@@ -81,16 +87,6 @@ import {mapState} from 'vuex'
         s = Math.floor(seconds - 60 * m);
         s = s.toString().length == 1 ? ('0' + s) : s;
         return m + ':' + s;
-      },
-      loveSong(index) {
-        let icon = document.querySelector('.love')
-        // icon.style.backgroundImage = "url('../assets/img/love-Select.png')| no-repeat"
-        // icon.classList.remove('song_love')
-        // icon.classList.add('song_love-select')
-        
-        this.$store.state.loveList.push(this.$store.state.songList[index])
-
-        // console.log('我喜欢听的歌'+this.$store.state.loveList[index].name)
       }
     }
   }
@@ -199,24 +195,6 @@ import {mapState} from 'vuex'
         margin-top: 7px;
         margin-left: 5px;
         background: url(https://y.gtimg.cn/mediastyle/yqq/img/icon_list_menu.png?max_age=2592000&v=4566a1a62ecad72fe9b9205d1ad62d2b) no-repeat;
-      }
-      .song_love {
-        width: 36px;
-        height: 36px;
-        display: block;
-        float: left;
-        margin-top: 8px;
-        margin-left: 5px;
-        background: url('../assets/img/love.png') no-repeat;
-      }
-       .song_love:hover, .song_love:active, .song_love:visited {
-        width: 36px;
-        height: 36px;
-        display: block;
-        float: left;
-        margin-top: 8px;
-        margin-left: 5px;
-        background: url('../assets/img/love-select.png') no-repeat;
       }
       .song_play:hover {
         background-position: -40px 0;

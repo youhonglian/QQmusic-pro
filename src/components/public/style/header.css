@@ -6,6 +6,14 @@
 .mod_header .section_inner {
   padding-top: 90px;
 }
+/*.header__opt {
+  position: absolute;
+  width: 258px;
+  top: 0;
+  right: -44px;
+  height: 90px;
+  line-height: 90px;
+}*/
 .section_inner {
   max-width: 1200px;
   margin: 0 auto;
@@ -17,8 +25,8 @@
   left: 0;
 }
 .qqmusic_logo {
-  width: 190px;
-  height: 52px;
+  width: 216px;
+  height: 72px;
 }
 .mod_top_nav {
   position: absolute;
@@ -100,10 +108,12 @@
 }
 .header__opt {
   position: absolute;
+  width: 235px;
   top: 0;
-  right: 2px;
+  right: -63px;
   height: 90px;
   line-height: 90px;
+  margin-left: 20px;
 }
 .mod_top_login {
   font-size: 0;
@@ -115,7 +125,7 @@
   height: 50px;
   width: 50px;
   top: 15px;
-  left: -70px;
+  left: -95px;
   border-radius: 80px;
   border: 2px solid rgba(60, 59, 60, .7);
 }
@@ -130,9 +140,9 @@
   font-size: 16px;
   float: left;
   height: 40px;
-  width: 40px;
-  left: -65px;
-  margin-right: 11px;
+  width: 60px;
+  left: -20px;
+  margin-right: 22px;
   text-align: center;
 }
 .js_login {
@@ -143,7 +153,7 @@
 }
 .top_login__btn_vip {
   line-height: 39px;
-  margin-top: 24px;
+  margin-top: 25px;
   padding: 0 11px;
   margin-left: 10px;
   margin-right: 0;
@@ -176,7 +186,7 @@
   height: 51px;
   line-height: 51px;
   border-top: 1px solid #f2f2f2;
-  padding-left: 256px;
+  padding-left: 249px;
 }
 .top_subnav__item {
   float: left;
@@ -249,4 +259,28 @@
   float: right;
   color: #999;
   font-size: 12px;
+}
+.dialog-vip {
+  z-index: 3000;
+}
+.el-dialog__header {
+    padding: 40px 32px -12px 33px !important;
+}
+.v-modal {
+  display: none
+}
+.el-dialog__body {
+    padding: 0 20px;
+    color: #48576a;
+    font-size: 14px;
+}
+p.nickname {
+    z-index: 100;
+    color: black;
+    font-size: 10px;
+    width: 73px;
+    position: absolute;
+    left: -20px;
+    height: 74px;
+    overflow: hidden
 }
