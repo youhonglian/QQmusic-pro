@@ -9,6 +9,8 @@ import player from '../pages/player'
 import singer from '../components/singer'
 import cd from '../components/cd'
 import mv from '../components/mv'
+import showMv from '../components/showMv'
+
 
 
 Vue.use(Router)
@@ -69,6 +71,11 @@ export default new Router({
       path: '/artList',
       name: 'artList',
       component: artList
+    },
+    {
+      path: '/showMv/:id',
+      name: 'showMv',
+      component: showMv
     },
     {
       path: '/player/:id',

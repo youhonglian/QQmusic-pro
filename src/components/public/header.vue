@@ -135,6 +135,13 @@ import {mapActions, mapState} from 'vuex'
       }
     },
     methods: {
+      fail() {
+        const h = this.$createElement;
+          this.$notify.info({
+          message: '请输入您要搜索的内容',
+          showClose: false
+        });
+      },
       search: function (keyword, error) {
         if (keyword.trim()) {
           console.log(keyword)
@@ -145,7 +152,7 @@ import {mapActions, mapState} from 'vuex'
               this.$router.push({path: '/artList', query: {keyword: this.keyword}})
             })
         } else {
-          alert(error)
+          this.fail()
         }
       },
       schleave: function () {

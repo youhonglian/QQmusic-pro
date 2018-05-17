@@ -5,6 +5,16 @@
       <div class="imgUrl" @click="showLyric()">
         <img :src="song[0].al.picUrl" alt="">
       </div>
+      <div class="hotComments" v-show="isConment">   
+          <div class="comment-item" v-for="item in hotComments ">
+              <img class="comment-avatar" :src="item.user.avatarUrl" :title="item.user.nickname">
+              <span class="comment">{{item.content}}</span>
+          </div>
+          <div class="comment-add">
+            <input type="text" class="comment-input" v-model="comment" @keyup.enter="addComment()">
+            <button class="comment-enter" @click="addComment()">发表评论</button>
+          </div>
+      </div>
       <div class="mod-footer">
         <a href="javascript:;" class="btn_big_prev"></a>
         <a href="javascript:;" class="btn_big_play" @click="isPlay()" v-if="isPlaying"></a>
@@ -33,10 +43,11 @@
         <div class="player_progress player_voice">
           <a href="javascript:;" class="btn_big_voice"  @click="voice()" v-if="sound"></a>
           <a href="javascript:;" class="btn_no_voice"  @click="voice()" v-if="!sound"></a>
-          <a href="" class="btn_big_down" :download="this.$store.state.src"></a>
+          <a href="" class="btn_big_down" :download="this.$store.state.src"></a>          
           <a href="javascript:;" class="btn_big_share tooltip"  @click="share()" @onmouseover="share()">
               <div id="share-2" class="tooltiptext" ></div>
           </a>
+          <a href="javascript:;" class="btn_comment"  @click="showConment()"></a>
         </div>
       </div>
     </div>
@@ -61,6 +72,8 @@ export default {
       move: '',
       sound: true,
       now: 0,
+      comment: '',
+      isConment: false
     }
   },
   computed: {
@@ -75,6 +88,9 @@ export default {
     },
     lyric() {
       return this.$store.state.lyric
+    },
+    hotComments() {
+      return this.$store.state.hotComments
     },
     reDuration() {
       return this.duration/100
@@ -105,6 +121,10 @@ export default {
           .then(res => {
             this.$store.commit('save_song', res.data.songs)
           })
+        this.axios.get(`http://127.0.0.1:3000/comment/music?id=${that.sid}&limit=1`)
+        .then(res => {
+          this.$store.commit('save_hotComments', res.data.hotComments)
+        })
         this.axios.get(`http://localhost:3000/lyric?id=${that.sid}`)
           .then(res => {
             let str = res.data.lrc.lyric
@@ -172,6 +192,49 @@ export default {
       this.now = audio.currentTime;
       audio.play();
       this.$store.commit('save_isPlaying', true);
+    },
+    success() {
+      const h = this.$createElement;
+        this.$notify.success({
+        message: '评论成功',
+        showClose: false
+      });
+    },
+    fail() {
+      const h = this.$createElement;
+        this.$notify.info({
+        message: '评论失败',
+        showClose: false
+      });
+    },
+    unlogin() {
+      const h = this.$createElement;
+        this.$notify.info({
+        message: '请登录后发表评论',
+        showClose: false
+      });
+    },
+    showConment() {
+      this.isConment = !this.isConment
+    },
+    addComment() {
+      if(this.$store.state.isLogin == false) {
+        this.unlogin()
+      }
+      else if(this.comment.trim() != ''){
+          this.$store.state.hotComments.unshift({
+            user: {
+                avatarUrl: `${this.$store.state.user.avatarUrl}`,
+                nickname: `${this.$store.state.user.nickname}`,
+                },
+                content: `${this.comment}`
+          })
+          this.success()
+      }
+      else {
+          this.fail()
+      }
+       this.comment = ''
     }
   }
 }
@@ -188,7 +251,55 @@ export default {
 a {
   color: #fff;
 }
+.hotComments {
+    position: relative;
+    width: 37%;
+    height: 80%;
+    left: 62%;
+    overflow-y: scroll;
+   .comment-avatar {
+        height: 30px;
+        width: 30px;
+        margin-left: 10px;
+        margin-top: 17px;
+        border-radius: 80px;
+        border: 2px solid rgba(60, 59, 60, 0.1);
+   }
+   .comment {
+        position: relative;
+        padding: 8px;
+        margin-left: 60px;
+        margin-top: -37px;
+        color: aliceblue;
+        background-color: rgba(52, 52, 52, 0.4);
+        border-radius: 5px;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+   }
+   .comment-add {
+    margin-top: 10px;
+      .comment-input {
+        margin-left: 60px;
+        background-color: rgba(52, 52, 52, 0.4);
+        border: 1px solid rgba(52, 52, 52, 0.4);
+        border-radius: 5px;
+        width: 70%;
+        height: 28px;
+        color: antiquewhite;
+        outline: #31c27c;
+    }
+    .comment-enter {
+        background-color: #31c27c;
+        border: 1px solid #31c27c;
+        border-radius: 5px;
+        color: #fff;
+        width: 16%;
+        height: 28px;
+    }
+   }
 
+}
 .player-mask,
 .player-bg,
 .mod-player {
@@ -274,6 +385,7 @@ a {
 .btn_big_style_single,
 .btn_big_voice,
 .btn_no_voice,
+.btn_comment,
 .btn_lang,
 .player_progress__dot {
   background: url(https://y.gtimg.cn/mediastyle/yqq/img/player.png?max_age=2592000&v=749f8d7b865b29877500567512879e12);
@@ -483,5 +595,13 @@ a {
   position: relative;
   height: 2px;
   background: rgba(255, 255, 255, 0.1);
+}
+
+.btn_comment {
+    top: 5px;
+    left: -166px;
+    width: 26px;
+    height: 25px;
+    background-position: 0 -400px;
 }
 </style>

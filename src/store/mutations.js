@@ -24,6 +24,15 @@ export default{
   save_lyric(state, lyric) {
     state.lyric = lyric
   },
+  save_hotComments(state, hotComments) {
+    state.hotComments = hotComments
+  },
+  save_lastMv(state, lastMv) {
+    state.lastMv = lastMv
+  },
+  save_Mv(state, Mv) {
+    state.Mv = Mv
+  },
   save_nickname(state, nickname) {
     state.user.nickname = nickname
   },

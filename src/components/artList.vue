@@ -84,13 +84,7 @@ import {mapState} from 'vuex'
       },
       loveSong(index) {
         let icon = document.querySelector('.love')
-        // icon.style.backgroundImage = "url('../assets/img/love-Select.png')| no-repeat"
-        // icon.classList.remove('song_love')
-        // icon.classList.add('song_love-select')
-        
         this.$store.state.loveList.push(this.$store.state.songList[index])
-
-        // console.log('我喜欢听的歌'+this.$store.state.loveList[index].name)
       }
     }
   }

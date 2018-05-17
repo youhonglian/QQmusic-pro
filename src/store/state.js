@@ -11,6 +11,9 @@ const state = {
   src: '',
   isPlaying: false,
   lyric: '',
+  hotComments: '',
+  lastMv: '',
+  Mv: [],
   // voice: true,
   dialogFormVisible: false,
   user: [
